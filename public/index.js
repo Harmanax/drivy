@@ -172,13 +172,20 @@ function findCarFromId(id) {
         if (res >= 0) return cars[res]; else return null;
     }
 
-function calcDays(dateStart, dateEnd) {
-    var d1 = new Date(dateStart);
-    var d2 = new Date(dateEnd);
-    return d2.getDate() - d1.getDate() + 1;        
-}
+    // Added for Exercice 5
+    function findRentalFromId(id) {
+        var res = -1;
+        rentals.forEach(function (e, idx) { if (e.id === id) { res = idx; return }; });
+        if (res >= 0) return rentals[res]; else return null;
+    }
 
-function RentalPrice(rent) {
+    function calcDays(dateStart, dateEnd) {
+        var d1 = new Date(dateStart);
+        var d2 = new Date(dateEnd);
+        return d2.getDate() - d1.getDate() + 1;        
+    }
+
+    function RentalPrice(rent) {
         var timeCost = 0;
         var distCost = 0;
         var addCost = 0;
@@ -224,8 +231,31 @@ function RentalPrice(rent) {
         rent.commission = createCommission(rent);
     });
 
-	
-console.log(cars);
-console.log(rentals);
-console.log(actors);
+    // Exercice 2 : function RentalPrice has been modified
+
+    // Exercice 3 & 4 : functions modified
+
+    // Exercice 5 :
+    actors.forEach(function (act) {
+        var rental = findRentalFromId(act.rentalId);
+        if (rental != null) {
+            act.payment.forEach(function (pay) {
+                switch (pay.who) {
+                    case 'driver':
+                        pay.amount = rental.price;
+                        break;
+                    case 'owner':
+                        pay.amount = rental.price - rental.commission.insurance - rental.commission.assistance - rental.commission.drivy;
+                        break;
+                    default:
+                        pay.amount = rental.commission[pay.who];
+                        break;
+                }
+            });
+        }
+    });
+
+    console.log(cars);
+    console.log(rentals);
+    console.log(actors);
 console.log(rentalModifications);
