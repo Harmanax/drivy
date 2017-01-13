@@ -178,39 +178,53 @@ function calcDays(dateStart, dateEnd) {
     return d2.getDate() - d1.getDate() + 1;        
 }
 
-    function RentalPrice(carId, dateStart, dateEnd, dist) {
+function RentalPrice(rent) {
         var timeCost = 0;
         var distCost = 0;
-        var days = calcDays(dateStart, dateEnd);
-        var car = findCarFromId(carId);
+        var addCost = 0;
+        var days = calcDays(rent.pickupDate, rent.returnDate);
+        var car = findCarFromId(rent.carId);
         if (car != null) {
             var ppd = car.pricePerDay;
             if (days > 10) ppd *= 0.5;
             else if (days > 4) ppd *= 0.7;
             else if (days > 1) ppd *= 0.9;
             timeCost = ppd * days;
-            distCost = car.pricePerKm * dist;
+            distCost = car.pricePerKm * rent.distance;
+            // Exercice 4 : additional charges
+            if (rent.options.deductibleReduction) {
+                addCost = days * 4;                
+            }
         }
-        return timeCost + distCost;
+        return timeCost + distCost + addCost;
     }
 
     // Exercice 3
     function createCommission(rent) {
-        var com = rent.price * 0.3;
+        // Modified for Exercice 4
+        var price = rent.price;
+        var addCost = 0;
+        var days = calcDays(rent.pickupDate, rent.returnDate);
+        if (rent.options.deductibleReduction) {
+            // calc add cost for drivy
+            addCost = days * 4;
+            // dont count add cost into commission
+            price -= addCost;
+        }
+        var com = price * 0.3;
         var ins = com / 2;
-        var ass = calcDays(rent.pickupDate, rent.returnDate) * 1; // 1€ per day
-        var dri = com - ins - ass;
+        var ass = days * 1; // 1€ per day
+        var dri = com - ins - ass + addCost;
         return { 'insurance': ins, 'assistance': ass, 'drivy': dri };
     }
 
     // Exercice 1
     rentals.forEach(function (rent) {
-        rent.price = RentalPrice(rent.carId, rent.pickupDate, rent.returnDate, rent.distance);
+        rent.price = RentalPrice(rent);
         rent.commission = createCommission(rent);
-		console.log ("rental price : " + rent.price);
     });
 
-
+	
 console.log(cars);
 console.log(rentals);
 console.log(actors);
