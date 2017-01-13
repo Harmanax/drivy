@@ -165,39 +165,51 @@ var rentalModifications = [{
   'pickupDate': '2015-12-05'
 }];
 
-
-// Ex1 Euro-Kilometers
+// Ex2 modification of the ex1 to implement price reduction
 function findCarFromId(id) {
-    var res = -1;
-    cars.forEach(function(e, idx) { if (e.id===id) { res=idx; return}; });
-    if (res>=0) return cars[res]; else return null;
-}
+        var res = -1;
+        cars.forEach(function (e, idx) { if (e.id === id) { res = idx; return }; });
+        if (res >= 0) return cars[res]; else return null;
+    }
 
-function RentalPrice(carId, dateStart, dateEnd, dist) {
-    var timeCost = 0;
-    var distCost = 0;
+function calcDays(dateStart, dateEnd) {
     var d1 = new Date(dateStart);
     var d2 = new Date(dateEnd);
-    var days = d2.getDate() - d1.getDate() + 1;
-    var car = findCarFromId(carId);
-    if (car != null) {
-        var ppd = car.pricePerDay;
-        if (days > 10) ppd *= 0.5;
-        else if (days > 4 && days <= 10) ppd *= 0.7;
-        else if (days > 1 && days <=4) ppd *= 0.9;
-        timeCost = ppd * days;
-        distCost = car.pricePerKm * dist;
-    }
-	return timeCost + distCost;
+    return d2.getDate() - d1.getDate() + 1;        
 }
-	
-rentals.forEach(function(rent) {
-    rent.price = RentalPrice(rent.carId, rent.pickupDate, rent.returnDate, rent.distance);
-	console.log ("rental price : " + rent.price);
-});
 
+    function RentalPrice(carId, dateStart, dateEnd, dist) {
+        var timeCost = 0;
+        var distCost = 0;
+        var days = calcDays(dateStart, dateEnd);
+        var car = findCarFromId(carId);
+        if (car != null) {
+            var ppd = car.pricePerDay;
+            if (days > 10) ppd *= 0.5;
+            else if (days > 4) ppd *= 0.7;
+            else if (days > 1) ppd *= 0.9;
+            timeCost = ppd * days;
+            distCost = car.pricePerKm * dist;
+        }
+        return timeCost + distCost;
+    }
 
-// Exercice 2 : function RentalPrice has been modified
+    // Exercice 3
+    function createCommission(rent) {
+        var com = rent.price * 0.3;
+        var ins = com / 2;
+        var ass = calcDays(rent.pickupDate, rent.returnDate) * 1; // 1€ per day
+        var dri = com - ins - ass;
+        return { 'insurance': ins, 'assistance': ass, 'drivy': dri };
+    }
+
+    // Exercice 1
+    rentals.forEach(function (rent) {
+        rent.price = RentalPrice(rent.carId, rent.pickupDate, rent.returnDate, rent.distance);
+        rent.commission = createCommission(rent);
+		console.log ("rental price : " + rent.price);
+    });
+
 
 console.log(cars);
 console.log(rentals);
