@@ -165,6 +165,34 @@ var rentalModifications = [{
   'pickupDate': '2015-12-05'
 }];
 
+
+// Ex1 Euro-Kilometers
+function findCarFromId(id) {
+    var res = -1;
+    cars.forEach(function(e, idx) { if (e.id===id) { res=idx; return}; });
+    if (res>=0) return cars[res]; else return null;
+}
+
+
+function RentalPrice(carId, dateStart, dateEnd, dist) {
+    var timeCost = 0;
+    var distCost = 0;
+    var d1 = new Date(dateStart);
+    var d2 = new Date(dateEnd);
+    var days = d2.getDate() - d1.getDate() + 1;
+    var car = findCarFromId(carId);
+    if (car != null) {
+        timeCost = car.pricePerDay * days;
+        distCost = car.pricePerKm * dist;
+    }
+    return timeCost + distCost;
+}
+
+rentals.forEach(function(rent) {
+    rent.price = RentalPrice(rent.carId, rent.pickupDate, rent.returnDate, rent.distance);
+	console.log ("rental price : " + rent.price);
+});
+
 console.log(cars);
 console.log(rentals);
 console.log(actors);
