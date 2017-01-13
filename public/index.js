@@ -173,7 +173,6 @@ function findCarFromId(id) {
     if (res>=0) return cars[res]; else return null;
 }
 
-
 function RentalPrice(carId, dateStart, dateEnd, dist) {
     var timeCost = 0;
     var distCost = 0;
@@ -182,16 +181,23 @@ function RentalPrice(carId, dateStart, dateEnd, dist) {
     var days = d2.getDate() - d1.getDate() + 1;
     var car = findCarFromId(carId);
     if (car != null) {
-        timeCost = car.pricePerDay * days;
+        var ppd = car.pricePerDay;
+        if (days > 10) ppd *= 0.5;
+        else if (days > 4 && days <= 10) ppd *= 0.7;
+        else if (days > 1 && days <=4) ppd *= 0.9;
+        timeCost = ppd * days;
         distCost = car.pricePerKm * dist;
     }
-    return timeCost + distCost;
+	return timeCost + distCost;
 }
-
+	
 rentals.forEach(function(rent) {
     rent.price = RentalPrice(rent.carId, rent.pickupDate, rent.returnDate, rent.distance);
 	console.log ("rental price : " + rent.price);
 });
+
+
+// Exercice 2 : function RentalPrice has been modified
 
 console.log(cars);
 console.log(rentals);
