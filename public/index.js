@@ -170,6 +170,9 @@ var rentalModifications = [{
 // START OF EXERCICES
 //====================================================
 
+var DEDUCTIBLE_COST = 4;    // cost per day for deductible reduction
+
+
 // return the number of days between 2 dates
 function calcDays(dateStart, dateEnd) {
     var d1 = new Date(dateStart);
@@ -178,39 +181,51 @@ function calcDays(dateStart, dateEnd) {
 }
 
 
-function RentalPrice(carId, dateStart, dateEnd, dist) {
+function RentalPrice(rental) {
     var timeCost = 0;
     var distCost = 0;
-    var days = calcDays(dateStart, dateEnd);
-    // find car from carId in array
-    var car = cars.find(function (c) { if (c.id === carId) return c; });
+    var addCost = 0;
+    var days = calcDays(rental.pickupDate, rental.returnDate);
+    // find the car in array
+    var car = cars.find(function (c) { if (c.id === rental.carId) return c; });
     if (car != null) {
-        // car found        
-        var ppd = car.pricePerDay;  // normal price
-        // check for discount
+        var ppd = car.pricePerDay;
         if (days > 10) ppd *= 0.5;
         else if (days > 4) ppd *= 0.7;
         else if (days > 1) ppd *= 0.9;
         timeCost = ppd * days;
-        distCost = car.pricePerKm * dist;
+        distCost = car.pricePerKm * rental.distance;
+        // check for additional charge, 4€ / day
+        if (rental.options.deductibleReduction) {
+            addCost = days * DEDUCTIBLE_COST;
+        }
     }
-    return timeCost + distCost;
+    rental.price = timeCost + distCost + addCost;
 }
 
 
 function createCommission(rental) {
     // calculates parts of commission
-    var com = rental.price * 0.3;
+    var price = rental.price;
+    var addCost = 0;
+    var days = calcDays(rental.pickupDate, rental.returnDate);
+    if (rental.options.deductibleReduction) {
+        // calc add cost for drivy
+        addCost = days * DEDUCTIBLE_COST;
+        // dont count add cost into commission
+        price -= addCost;
+    }
+    var com = price * 0.3;
     var ins = com / 2;
-    var ass = calcDays(rental.pickupDate, rental.returnDate) * 1; // 1€ per day
-    var dri = com - ins - ass;
-    // create commission into rental 
+    var ass = days * 1; // 1€ per day
+    var dri = com - ins - ass + addCost;
     rental.commission = { 'insurance': ins, 'assistance': ass, 'drivy': dri };
 }
 
+
 // parse array for calculate each rental price
 rentals.forEach(function (rental) {
-    rental.price = RentalPrice(rental.carId, rental.pickupDate, rental.returnDate, rental.distance);
+    RentalPrice(rental);
     createCommission(rental);
 });
 
