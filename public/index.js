@@ -179,15 +179,19 @@ function RentalPrice(carId, dateStart, dateEnd, dist) {
     // find car from carId in array
     var car = cars.find(function (c) { if (c.id === carId) return c; });
     if (car != null) {
-        // car found
-        timeCost = car.pricePerDay * days;
+        // car found        
+        var ppd = car.pricePerDay;  // normal price
+        // check for discount
+        if (days > 10) ppd *= 0.5;
+        else if (days > 4) ppd *= 0.7;
+        else if (days > 1) ppd *= 0.9;
+        timeCost = ppd * days;
         distCost = car.pricePerKm * dist;
     }
     return timeCost + distCost;
 }
 
 
-// Exercice 1
 // parse array for calculate each rental price
 rentals.forEach(function (rental) {
     rental.price = RentalPrice(rental.carId, rental.pickupDate, rental.returnDate, rental.distance);
