@@ -230,30 +230,84 @@ rentals.forEach(function (rental) {
 });
 
 
-actors.forEach(function (act) {
-    var rental = rentals.find(function (r) { if (r.id === act.rentalId) return r; });
+function calcPayments(actorsArray) {
+    actorsArray.forEach(function (act) {
+        var rental = rentals.find(function (r) { if (r.id === act.rentalId) return r; });
+        if (rental != null) {
+            act.payment.forEach(function (pay) {
+                switch (pay.who) {
+                    case 'driver':
+                        pay.amount = rental.price;
+                        break;
+                    case 'owner':
+                        pay.amount = rental.price - rental.commission.insurance - rental.commission.assistance - rental.commission.drivy;
+                        break;
+                    case 'drivy':
+                    case 'insurance':
+                    case 'assistance':
+                        pay.amount = rental.commission[pay.who];
+                        break;
+                    default:
+                        // should not pass here
+                        alert('payment for ' + pay.who + ' ? error !');
+                        break;
+                }
+            });
+        }
+    });
+}
+
+// calculates payments (first time)
+calcPayments(actors);
+
+// function used for real cloning, even arrays containing objects
+// otherwise array cloning returns only references of inside objects
+function realCompleteClone(variable) {
+    return JSON.parse(JSON.stringify(variable));
+}
+
+// process all modifications
+rentalModifications.forEach(function (rm) {
+    var rental = rentals.find(function (r) { if (r.id === rm.rentalId) return r; });
     if (rental != null) {
-        act.payment.forEach(function (pay) {
-            switch (pay.who) {
-                case 'driver':
-                    pay.amount = rental.price;
-                    break;
-                case 'owner':
-                    pay.amount = rental.price - rental.commission.insurance - rental.commission.assistance - rental.commission.drivy;
-                    break;
-                case 'drivy':
-                case 'insurance':
-                case 'assistance':
-                    pay.amount = rental.commission[pay.who];
-                    break;
-                default:
-                    // should not pass here
-                    alert('payment for ' + pay.who + ' ? error !');
-                    break;
-            }
-        });
+        // we have a rental, search actor
+        var actor = actors.find(function (a) { if (a.rentalId === rental.id) return a; });
+        if (actor != null) {
+            // we have the actor
+            // duplicate the old payment array
+            actor.firstPay = realCompleteClone(actor.payment);    // duplicate array (with values, not refs)
+            // modify datas if needed
+            if (rm.pickupDate != null) rental.pickupDate = rm.pickupDate;
+            if (rm.returnDate != null) rental.returnDate = rm.returnDate;
+            if (rm.distance != null) rental.distance = rm.distance;
+            // recalculate prices & commissions
+            RentalPrice(rental);
+            createCommission(rental);
+        }
     }
 });
+
+
+// recalculates payments after modifications
+calcPayments(actors);
+
+// calculates deltas
+actors.forEach(function (act) {
+    if (act.firstPay != null) {
+        act.delta = realCompleteClone(act.payment);   // copy array
+        act.delta.forEach(function (del, idx) {
+            del.amount = act.payment[idx].amount - act.firstPay[idx].amount;
+            if (del.amount < 0) {
+                if (del.type == 'credit') del.type = 'debit'; else del.type = 'credit';
+                del.amount = -del.amount;
+            }
+        });
+        act.payment = act.firstPay; // copy array (with refs is ok)
+        delete act.firstPay;    // remove unused array
+    }
+});
+
+
 //====================================================
 
 console.log(cars);
