@@ -230,6 +230,30 @@ rentals.forEach(function (rental) {
 });
 
 
+actors.forEach(function (act) {
+    var rental = rentals.find(function (r) { if (r.id === act.rentalId) return r; });
+    if (rental != null) {
+        act.payment.forEach(function (pay) {
+            switch (pay.who) {
+                case 'driver':
+                    pay.amount = rental.price;
+                    break;
+                case 'owner':
+                    pay.amount = rental.price - rental.commission.insurance - rental.commission.assistance - rental.commission.drivy;
+                    break;
+                case 'drivy':
+                case 'insurance':
+                case 'assistance':
+                    pay.amount = rental.commission[pay.who];
+                    break;
+                default:
+                    // should not pass here
+                    alert('payment for ' + pay.who + ' ? error !');
+                    break;
+            }
+        });
+    }
+});
 //====================================================
 
 console.log(cars);
