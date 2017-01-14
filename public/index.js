@@ -170,12 +170,18 @@ var rentalModifications = [{
 // START OF EXERCICES
 //====================================================
 
+// return the number of days between 2 dates
+function calcDays(dateStart, dateEnd) {
+    var d1 = new Date(dateStart);
+    var d2 = new Date(dateEnd);
+    return d2.getDate() - d1.getDate() + 1;
+}
+
+
 function RentalPrice(carId, dateStart, dateEnd, dist) {
     var timeCost = 0;
     var distCost = 0;
-    var d1 = new Date(dateStart);
-    var d2 = new Date(dateEnd);
-    var days = d2.getDate() - d1.getDate() + 1; // add 1 because 0 means the same day, then 1 day
+    var days = calcDays(dateStart, dateEnd);
     // find car from carId in array
     var car = cars.find(function (c) { if (c.id === carId) return c; });
     if (car != null) {
@@ -192,9 +198,20 @@ function RentalPrice(carId, dateStart, dateEnd, dist) {
 }
 
 
+function createCommission(rental) {
+    // calculates parts of commission
+    var com = rental.price * 0.3;
+    var ins = com / 2;
+    var ass = calcDays(rental.pickupDate, rental.returnDate) * 1; // 1€ per day
+    var dri = com - ins - ass;
+    // create commission into rental 
+    rental.commission = { 'insurance': ins, 'assistance': ass, 'drivy': dri };
+}
+
 // parse array for calculate each rental price
 rentals.forEach(function (rental) {
     rental.price = RentalPrice(rental.carId, rental.pickupDate, rental.returnDate, rental.distance);
+    createCommission(rental);
 });
 
 
