@@ -1,21 +1,22 @@
-'use strict';
+﻿'use strict';
 
 //list of cars
 //useful for ALL exercises
 var cars = [{
-  'id': 'p306',
-  'vehicule': 'peugeot 306',
-  'pricePerDay': 20,
-  'pricePerKm': 0.10
+    'id': 'p306',
+    'vehicule': 'peugeot 306',
+    'pricePerDay': 20,
+    'pricePerKm': 0.10
 }, {
-  'id': 'rr-sport',
-  'pricePerDay': 60,
-  'pricePerKm': 0.30
+    'id': 'rr-sport',
+    'pricePerDay': 60,
+    'pricePerKm': 0.30
 }, {
-  'id': 'p-boxster',
-  'pricePerDay': 100,
-  'pricePerKm': 0.45
+    'id': 'p-boxster',
+    'pricePerDay': 100,
+    'pricePerKm': 0.45
 }];
+
 
 //list of rentals
 //useful for ALL exercises
@@ -23,239 +24,180 @@ var cars = [{
 //The `commission` is updated from exercice 3
 //The `options` is useful from exercice 4
 var rentals = [{
-  'id': '1-pb-92',
-  'driver': {
-    'firstName': 'Paul',
-    'lastName': 'Bismuth'
-  },
-  'carId': 'p306',
-  'pickupDate': '2016-01-02',
-  'returnDate': '2016-01-02',
-  'distance': 100,
-  'options': {
-    'deductibleReduction': false
-  },
-  'price': 0,
-  'commission': {
-    'insurance': 0,
-    'assistance': 0,
-    'drivy': 0
-  }
+    'id': '1-pb-92',
+    'driver': {
+        'firstName': 'Paul',
+        'lastName': 'Bismuth'
+    },
+    'carId': 'p306',
+    'pickupDate': '2016-01-02',
+    'returnDate': '2016-01-02',
+    'distance': 100,
+    'options': {
+        'deductibleReduction': false
+    },
+    'price': 0,
+    'commission': {
+        'insurance': 0,
+        'assistance': 0,
+        'drivy': 0
+    }
 }, {
-  'id': '2-rs-92',
-  'driver': {
-    'firstName': 'Rebecca',
-    'lastName': 'Solanas'
-  },
-  'carId': 'rr-sport',
-  'pickupDate': '2016-01-05',
-  'returnDate': '2016-01-09',
-  'distance': 300,
-  'options': {
-    'deductibleReduction': true
-  },
-  'price': 0,
-  'commission': {
-    'insurance': 0,
-    'assistance': 0,
-    'drivy': 0
-  }
+    'id': '2-rs-92',
+    'driver': {
+        'firstName': 'Rebecca',
+        'lastName': 'Solanas'
+    },
+    'carId': 'rr-sport',
+    'pickupDate': '2016-01-05',
+    'returnDate': '2016-01-09',
+    'distance': 300,
+    'options': {
+        'deductibleReduction': true
+    },
+    'price': 0,
+    'commission': {
+        'insurance': 0,
+        'assistance': 0,
+        'drivy': 0
+    }
 }, {
-  'id': '3-sa-92',
-  'driver': {
-    'firstName': ' Sami',
-    'lastName': 'Ameziane'
-  },
-  'carId': 'p-boxster',
-  'pickupDate': '2015-12-01',
-  'returnDate': '2015-12-15',
-  'distance': 1000,
-  'options': {
-    'deductibleReduction': true
-  },
-  'price': 0,
-  'commission': {
-    'insurance': 0,
-    'assistance': 0,
-    'drivy': 0
-  }
+    'id': '3-sa-92',
+    'driver': {
+        'firstName': ' Sami',
+        'lastName': 'Ameziane'
+    },
+    'carId': 'p-boxster',
+    'pickupDate': '2015-12-01',
+    'returnDate': '2015-12-15',
+    'distance': 1000,
+    'options': {
+        'deductibleReduction': true
+    },
+    'price': 0,
+    'commission': {
+        'insurance': 0,
+        'assistance': 0,
+        'drivy': 0
+    }
 }];
 
 //list of actors for payment
 //useful from exercise 5
 var actors = [{
-  'rentalId': '1-pb-92',
-  'payment': [{
-    'who': 'driver',
-    'type': 'debit',
-    'amount': 0
-  }, {
-    'who': 'owner',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'insurance',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'assistance',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'drivy',
-    'type': 'credit',
-    'amount': 0
-  }]
+    'rentalId': '1-pb-92',
+    'payment': [{
+        'who': 'driver',
+        'type': 'debit',
+        'amount': 0
+    }, {
+        'who': 'owner',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'insurance',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'assistance',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'drivy',
+        'type': 'credit',
+        'amount': 0
+    }]
 }, {
-  'rentalId': '2-rs-92',
-  'payment': [{
-    'who': 'driver',
-    'type': 'debit',
-    'amount': 0
-  }, {
-    'who': 'owner',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'insurance',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'assistance',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'drivy',
-    'type': 'credit',
-    'amount': 0
-  }]
+    'rentalId': '2-rs-92',
+    'payment': [{
+        'who': 'driver',
+        'type': 'debit',
+        'amount': 0
+    }, {
+        'who': 'owner',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'insurance',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'assistance',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'drivy',
+        'type': 'credit',
+        'amount': 0
+    }]
 }, {
-  'rentalId': '3-sa-92',
-  'payment': [{
-    'who': 'driver',
-    'type': 'debit',
-    'amount': 0
-  }, {
-    'who': 'owner',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'insurance',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'assistance',
-    'type': 'credit',
-    'amount': 0
-  }, {
-    'who': 'drivy',
-    'type': 'credit',
-    'amount': 0
-  }]
+    'rentalId': '3-sa-92',
+    'payment': [{
+        'who': 'driver',
+        'type': 'debit',
+        'amount': 0
+    }, {
+        'who': 'owner',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'insurance',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'assistance',
+        'type': 'credit',
+        'amount': 0
+    }, {
+        'who': 'drivy',
+        'type': 'credit',
+        'amount': 0
+    }]
 }];
 
 //list of rental modifcation
 //useful for exercise 6
 var rentalModifications = [{
-  'rentalId': '1-pb-92',
-  'returnDate': '2016-01-04',
-  'distance': 150
+    'rentalId': '1-pb-92',
+    'returnDate': '2016-01-04',
+    'distance': 150
 }, {
-  'rentalId': '3-sa-92',
-  'pickupDate': '2015-12-05'
+    'rentalId': '3-sa-92',
+    'pickupDate': '2015-12-05'
 }];
 
-// Ex2 modification of the ex1 to implement price reduction
-function findCarFromId(id) {
-        var res = -1;
-        cars.forEach(function (e, idx) { if (e.id === id) { res = idx; return }; });
-        if (res >= 0) return cars[res]; else return null;
+//====================================================
+// START OF EXERCICES
+//====================================================
+
+function RentalPrice(carId, dateStart, dateEnd, dist) {
+    var timeCost = 0;
+    var distCost = 0;
+    var d1 = new Date(dateStart);
+    var d2 = new Date(dateEnd);
+    var days = d2.getDate() - d1.getDate() + 1; // add 1 because 0 means the same day, then 1 day
+    // find car from carId in array
+    var car = cars.find(function (c) { if (c.id === carId) return c; });
+    if (car != null) {
+        // car found
+        timeCost = car.pricePerDay * days;
+        distCost = car.pricePerKm * dist;
     }
+    return timeCost + distCost;
+}
 
-    // Added for Exercice 5
-    function findRentalFromId(id) {
-        var res = -1;
-        rentals.forEach(function (e, idx) { if (e.id === id) { res = idx; return }; });
-        if (res >= 0) return rentals[res]; else return null;
-    }
 
-    function calcDays(dateStart, dateEnd) {
-        var d1 = new Date(dateStart);
-        var d2 = new Date(dateEnd);
-        return d2.getDate() - d1.getDate() + 1;        
-    }
+// Exercice 1
+// parse array for calculate each rental price
+rentals.forEach(function (rental) {
+    rental.price = RentalPrice(rental.carId, rental.pickupDate, rental.returnDate, rental.distance);
+});
 
-    function RentalPrice(rent) {
-        var timeCost = 0;
-        var distCost = 0;
-        var addCost = 0;
-        var days = calcDays(rent.pickupDate, rent.returnDate);
-        var car = findCarFromId(rent.carId);
-        if (car != null) {
-            var ppd = car.pricePerDay;
-            if (days > 10) ppd *= 0.5;
-            else if (days > 4) ppd *= 0.7;
-            else if (days > 1) ppd *= 0.9;
-            timeCost = ppd * days;
-            distCost = car.pricePerKm * rent.distance;
-            // Exercice 4 : additional charges
-            if (rent.options.deductibleReduction) {
-                addCost = days * 4;                
-            }
-        }
-        return timeCost + distCost + addCost;
-    }
 
-    // Exercice 3
-    function createCommission(rent) {
-        // Modified for Exercice 4
-        var price = rent.price;
-        var addCost = 0;
-        var days = calcDays(rent.pickupDate, rent.returnDate);
-        if (rent.options.deductibleReduction) {
-            // calc add cost for drivy
-            addCost = days * 4;
-            // dont count add cost into commission
-            price -= addCost;
-        }
-        var com = price * 0.3;
-        var ins = com / 2;
-        var ass = days * 1; // 1€ per day
-        var dri = com - ins - ass + addCost;
-        return { 'insurance': ins, 'assistance': ass, 'drivy': dri };
-    }
+//====================================================
 
-    // Exercice 1
-    rentals.forEach(function (rent) {
-        rent.price = RentalPrice(rent);
-        rent.commission = createCommission(rent);
-    });
-
-    // Exercice 2 : function RentalPrice has been modified
-
-    // Exercice 3 & 4 : functions modified
-
-    // Exercice 5 :
-    actors.forEach(function (act) {
-        var rental = findRentalFromId(act.rentalId);
-        if (rental != null) {
-            act.payment.forEach(function (pay) {
-                switch (pay.who) {
-                    case 'driver':
-                        pay.amount = rental.price;
-                        break;
-                    case 'owner':
-                        pay.amount = rental.price - rental.commission.insurance - rental.commission.assistance - rental.commission.drivy;
-                        break;
-                    default:
-                        pay.amount = rental.commission[pay.who];
-                        break;
-                }
-            });
-        }
-    });
-
-    console.log(cars);
-    console.log(rentals);
-    console.log(actors);
+console.log(cars);
+console.log(rentals);
+console.log(actors);
 console.log(rentalModifications);
+
